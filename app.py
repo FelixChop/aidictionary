@@ -53,7 +53,7 @@ def define_word():
         image_url = item['image_url']['S']
         caption = item['caption']['S']
 
-    return render_template('index.html', validite="Le mot "+word+" est valide au scrabble.", 
+    return render_template('index.html', word=word, 
         definition=definition, image=image_url, image_caption=caption)
 
 ### GenAi functions

@@ -5,6 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="static/styles.css">
     <title>Dictionnaire d'aide au Scrabble</title>
 </head>
 <body>
@@ -14,11 +15,13 @@
         <input type="text" id="word" name="word">
         <button type="submit">Rechercher</button>
     </form>
-    <p id=validity>{{ validite }}</p>
+    {% if word %}
+    <p id=validity>Le mot <b>{{ word }}</b> est valide au Scrabble.</p>
     <p id=definition>{{ definition }}</p>
     <figure>
         <img src="{{ image }}" width="400" height="400" />
         <figcaption>{{ image_caption }}</figcaption>
     </figure>
+    {% endif %}
 </body>
 </html>
