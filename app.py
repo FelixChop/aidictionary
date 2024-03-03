@@ -13,9 +13,10 @@ from openai import OpenAI
 import boto3
 
 from dotenv import load_dotenv
-load_dotenv()
+print(load_dotenv())
 
 language='fr'
+text_completion_choice = 'openai'
 
 app = Flask(__name__, template_folder='.')
 
@@ -56,11 +57,21 @@ def define_word():
         definition=definition, image=image_url, image_caption=caption)
 
 ### GenAi functions
+
+def text_completion(prompt):
+    if text_completion_choice=='openai':
+        return client_openai.chat.completions.create(
+            model="gpt-4", 
+            messages=[{"role": "user", "content": prompt}]
+        )
+    elif text_completion_choice=='mistralai':
+        return client_mistalai.chat(
+            model="open-mistral-7b",
+            messages=[ChatMessage(role="user", content=prompt)],
+        )
+
 def generate_definition(word):
-    chat_response = client_mistalai.chat(
-        model="open-mistral-7b",
-        messages=[ChatMessage(role="user", content=prompt_definition(word))],
-    )
+    chat_response = text_completion(prompt_definition(word))
     return chat_response.choices[0].message.content
 
 def prompt_definition(word):
@@ -84,23 +95,16 @@ def generate_image(prompt_image):
     return image_url
 
 def generate_prompt_image_generation(word, definition):
-    chat_response = client_mistalai.chat(
-        model="open-mistral-7b",
-        messages=[ChatMessage(role="user", content='''Emploie le terme : '''+word+''' qui a la définition 
+    chat_response = text_completion('''Emploie le terme : '''+word+''' qui a la définition 
             suivante : '''+definition+''' dans une phrase. La phrase doit être plausible, comme sortie 
-            d'un ouvrage ou d'un journal, en respectant au mieux la définition du mot.''')]
-    )
+            d'un ouvrage ou d'un journal, en respectant au mieux la définition du mot.''')
     return chat_response.choices[0].message.content
 
 def generate_image_caption(prompt_image, word, definition):
-    chat_response = client_mistalai.chat(
-        model="open-mistral-7b",
-        messages=[ChatMessage(role="user", content='''Tu es un académicien français. Tourne cette phrase
+    chat_response = text_completion('''Tu es un académicien français. Tourne cette phrase
             en français : '''+prompt_image+''' en faisant en sorte que la phrase soit comme le sous-titre
             en langue française d'une image qui représente cette phrase. La phrase en français doit absolument 
-            employer le mot '''+word+''' qui a la définition suivante : '''+definition+'''. ''')],
-        max_tokens=100
-    )
+            employer le mot '''+word+''' qui a la définition suivante : '''+definition+'''. ''')
     return chat_response.choices[0].message.content[:chat_response.choices[0].message.content.find('.')]
 
 # def prompt_image(word, definition):
