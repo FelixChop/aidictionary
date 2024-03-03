@@ -5,16 +5,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Real Dictionary</title>
+    <title>Dictionnaire d'aide au Scrabble</title>
 </head>
 <body>
-    <h1>Welcome to The Real Dictionary</h1>
+    <h1>Bien plus qu'un simple dictionnaire</h1>
     <form action="/" method="POST">
-        <label for="word">Enter a word:</label>
+        <label for="word">Rechercher un mot :</label>
         <input type="text" id="word" name="word">
-        <button type="submit">Define</button>
+        <button type="submit">Rechercher</button>
     </form>
+    <p id=validity>{{ validite }}</p>
     <p id=definition>{{ definition }}</p>
-    <img src="{{ image }}" width="400" height="400" />
+    <figure>
+        <img src="{{ image }}" width="400" height="400" />
+        <figcaption>{{ image_caption }}</figcaption>
+    </figure>
 </body>
 </html>
